@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>VideoPlayer</title>
+</head>
+<style>
+    body, html {
+        height: 100%;
+        background: #61879d;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .time {
+        display: table;
+        margin-top: 20px;
+        /*border: 4px solid black;*/
+    }
+
+    .tabCell {
+        display: table-cell;
+    }
+
+    video {
+        height: 60%;
+        width: auto;
+</style>
+<body>
+
+<video height="500" id="mainVid" width="500">
+    <source src="Vids/amogus.mp4">
+</video>
+
+<div class="time">
+    <div class="tabCell" id="currTime">0</div>
+    <span class="tabCell">/</span>
+    <div class="tabCell" id="durTime"></div>
+</div>
+
+<button onclick="handlePlay()">Play / Pause</button>
+<button onclick="handlePreviousClick()">Previous</button>
+<button onclick="handleNextClick()">Next</button>
+<input max="100" min="0" onchange="handleRangeChange(event)" type="range">
+<select onchange="handleSpeed(event)">
+    <option>0.25</option>
+    <option>0.5</option>
+    <option selected>1.0</option>
+    <option>1.5</option>
+</select>
+
+
+</body>
+<script>
+    var sources = ["Vids/amogus.mp4", "Vids/KahootSweetDreams.mp4", "Vids/Minecraft Pigstep Leonz Remix.mp4"]
+    var vid = document.getElementById("mainVid")
+    var playPause = false
+    var currentSourceIndex = 0
+
+
+    function handleNextClick() {
+        currentSourceIndex++
+        if (currentSourceIndex > sources.length - 1) currentSourceIndex = 0;
+        console.log(currentSourceIndex);
+        vid.src = sources[currentSourceIndex];
+    }
+
+    function handlePreviousClick() {
+        currentSourceIndex--;
+        if (currentSourceIndex < 0) currentSourceIndex = sources.length - 1;
+        console.log(currentSourceIndex);
+        vid.src = sources[currentSourceIndex];
+    }
+
+    function handlePlay() {
+        if (playPause === false) {
+            vid.play()
+            playPause = true
+            console.log(playPause, "play")
+        } else {
+            vid.pause()
+            playPause = false
+            console.log(playPause, "pause")
+        }
+    }
+
+    function handleRangeChange(event) {
+        console.log(event.target.value)
+        vid.volume = event.target.value / 100
+    }
+
+    function handleSpeed(event) {
+        vid.playbackRate = event.target.value
+    }
+
+    vid.oncanplay = function () {
+        document.getElementById('durTime').innerHTML = Math.floor(vid.duration)
+    }
+    vid.addEventListener('timeupdate', (event) => {
+        console.log(event.timeStamp / 1000)
+        document.getElementById('currTime').innerHTML = Math.floor(vid.currentTime)
+    })
+</script>
+</html>
